@@ -1,0 +1,5 @@
+--[[
+  色覚シミュレーションKR ${SCRIPT_VERSION} by karoterra
+]]
+
+local CVS = require("KaroterraColorVisionSimulation")
