@@ -1,11 +1,16 @@
 {
   "files.associations": {
-    "*.lua.*": "lua",
-    "*.anm*": "lua",
-    "*.obj*": "lua",
-    "*.scn*": "lua",
-    "*.cam*": "lua",
-    "*.tra*": "lua",
+    "*.anm": "lua",
+    "*.obj": "lua",
+    "*.scn": "lua",
+    "*.cam": "lua",
+    "*.tra": "lua",
+    "*.lua.in": "lua",
+    "*.anm.in": "lua",
+    "*.obj.in": "lua",
+    "*.scn.in": "lua",
+    "*.cam.in": "lua",
+    "*.tra.in": "lua",
   },
   "[lua]": {
     "files.encoding": "shiftjis"
@@ -13,4 +18,7 @@
   "editor.formatOnSave": true,
   "C_Cpp.clang_format_style": "file",
   "cmake.configureOnOpen": true,
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "${env:VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+  },
 }

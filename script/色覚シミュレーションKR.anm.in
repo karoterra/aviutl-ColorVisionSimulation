@@ -1,5 +1,23 @@
 --[[
   色覚シミュレーションKR ${SCRIPT_VERSION} by karoterra
+
+  P型、D型、T型色覚の人にとってどの様な色が見にくかったり見やすかったりするか、
+  一般的な色覚の人が確認するためのスクリプトです。
+  ただし、各色覚の人がどの様に色を見ているか厳密にシミュレーションするものでは
+  ありません。
+
+  type: 色覚の種類
+    0: 一般的な色覚。色の変化なし。
+    1: P型色覚(1型2色覚)
+    2: D型色覚(2型2色覚)
+    3: T型色覚(3型2色覚)
+  severity: シミュレーションの程度。0で変化なし。100で完全に変化。
 ]]
 
+--track0:type,0,3,1,1
+--track1:severity,0,100,100,0.01
+
 local CVS = require("KaroterraColorVisionSimulation")
+local cv_type = math.floor(obj.track0)
+local severity = obj.track1 / 100
+obj.putpixeldata(CVS.simulate(cv_type, severity, obj.getpixeldata()))

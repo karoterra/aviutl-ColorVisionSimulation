@@ -1,5 +1,6 @@
 vendor/
 build/
 bin/
+test_out/
 
 *.vc.db*

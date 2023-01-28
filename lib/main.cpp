@@ -1,20 +1,38 @@
+#include <format>
 #include <lua.hpp>
 
-#ifndef LIB_NAME
-#define LIB_NAME cvs
-#endif
+#include "cl_manager.h"
+#include "color.h"
+#include "cvs_cl.h"
+#include "cvs_cpu.h"
+#include "cvs_params.h"
+#include "macro.h"
+#include "util.h"
 
-#ifndef LIB_VERSION
-#define LIB_VERSION ""
-#endif
+// data, w, h = simulate(type, severity, data, w, h)
+int Simulate(lua_State *L) {
+  const int argc = lua_gettop(L);
+  cvs::DebugPrint(std::format("argc = {}\n", argc));
 
-#define LUA_OPEN(x) LUA_OPEN_(x)
-#define LUA_OPEN_(x) luaopen_##x
+  const auto type = cvs::ToColorVisionType(lua_tointeger(L, 1));
+  const float severity = lua_tonumber(L, 2);
+  auto image = reinterpret_cast<cvs::BGRA *>(lua_touserdata(L, 3));
+  const int w = lua_tointeger(L, 4);
+  const int h = lua_tointeger(L, 5);
+  cvs::DebugPrint(std::format("type = {}, severity = {}, w = {}, h = {}",
+                              (int)type, severity, w, h));
 
-#define STRING(x) STRING_(x)
-#define STRING_(x) #x
+  if (cvs::CLManager::GetInstance().IsAvailable()) {
+    cvs::SimulateCL(type, severity, image, w * h);
+  } else {
+    cvs::SimulateCPU(type, severity, image, w * h);
+  }
+
+  return 3;
+}
 
 static const luaL_Reg functions[] = {
+    {"simulate", Simulate},
     {nullptr, nullptr},
 };
 
