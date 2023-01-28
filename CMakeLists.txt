@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
-project(ColorVisionSimulation
-  VERSION 0.0.0
-)
+project(aviutl-ColorVisionSimulation)
+set(PROJECT_VERSION 0.0.0-dev)
 
 enable_testing()
 
@@ -24,6 +23,24 @@ add_subdirectory(test)
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/source-charset:utf-8 /execution-charset:shift_jis>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/source-charset:utf-8 /execution-charset:shift_jis>")
 
-set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/bin/aviutl)
-install(TARGETS libcvs RUNTIME DESTINATION script)
-install(FILES ${SCRIPT_OUTPUT_FILES} DESTINATION script)
+set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/bin/aviutl/script/${PROJECT_NAME})
+install(TARGETS libcvs RUNTIME DESTINATION .)
+install(
+  FILES
+    ${SCRIPT_OUTPUT_FILES}
+    README.md
+    CHANGELOG.md
+    CREDITS.md
+    LICENSE
+  DESTINATION .
+)
+
+add_custom_target(pack
+  COMMAND
+    ${CMAKE_COMMAND}
+    -DMANIFEST_FILE="${CMAKE_BINARY_DIR}/install_manifest.txt"
+    -DOUTPUT_FILE="publish/${PROJECT_NAME}_v${PROJECT_VERSION}.zip"
+    -P pack.cmake
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  DEPENDS install
+)
