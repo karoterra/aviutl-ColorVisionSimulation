@@ -4,20 +4,20 @@
 
 CL_KERNEL_SOURCE(
 
-inline float4 ToLinearRGB(uchar4 v) {
-  float4 fv = convert_float4(v) / 255.f;
-  float4 cutoff = convert_float4(isless(fv, (float4)0.04045f));
-  float4 low = fv / 12.92f;
-  float4 high = powr((fv + 0.055f) / 1.055f, 2.4f);
+inline float3 ToLinearRGB(uchar3 v) {
+  float3 fv = convert_float3(v) / 255.f;
+  float3 cutoff = convert_float3(isless(fv, (float3)0.04045f));
+  float3 low = fv / 12.92f;
+  float3 high = powr((fv + 0.055f) / 1.055f, 2.4f);
   return mix(high, low, cutoff);
 }
 
-inline uchar4 ToSRGB(float4 v) {
-  float4 cutoff = convert_float4(isless(v, (float4)0.0031308f));
-  float4 low = v * 12.92f;
-  float4 high = pow(v, 1.f / 2.4f) * 1.055f - 0.055f;
-  float4 srgb = clamp(mix(high, low, cutoff) * 255.f, 0.f, 255.f);
-  return convert_uchar4(srgb);
+inline uchar3 ToSRGB(float3 v) {
+  float3 cutoff = convert_float3(isless(v, (float3)0.0031308f));
+  float3 low = v * 12.92f;
+  float3 high = pow(v, 1.f / 2.4f) * 1.055f - 0.055f;
+  float3 srgb = clamp(mix(high, low, cutoff) * 255.f, 0.f, 255.f);
+  return convert_uchar3(srgb);
 }
 
 __kernel void Brettel1997(
@@ -25,18 +25,17 @@ __kernel void Brettel1997(
     __constant float *params,
     const float severity) {
   size_t i = get_global_id(0);
-  float4 bgra = ToLinearRGB(image[i]);
+  float3 bgr = ToLinearRGB(image[i].xyz);
 
-  float x = dot(bgra.xyz, vload3(6, params));
+  float x = dot(bgr.xyz, vload3(6, params));
   int offset = isless(x, 0) * 3;
-  float4 bgra_cvd = (float4)(
-      dot(bgra.xyz, vload3(offset + 0, params)),
-      dot(bgra.xyz, vload3(offset + 1, params)),
-      dot(bgra.xyz, vload3(offset + 2, params)),
-      bgra.w
+  float3 bgr_cvd = (float3)(
+      dot(bgr, vload3(offset + 0, params)),
+      dot(bgr, vload3(offset + 1, params)),
+      dot(bgr, vload3(offset + 2, params))
   );
 
-  image[i] = ToSRGB(mix(bgra, bgra_cvd, severity));
+  image[i].xyz = ToSRGB(mix(bgr, bgr_cvd, severity));
 }
 
 __kernel void Vienot1999(
@@ -44,16 +43,15 @@ __kernel void Vienot1999(
     __constant float* mat,
     const float severity) {
   size_t i = get_global_id(0);
-  float4 bgra = ToLinearRGB(image[i]);
+  float3 bgr = ToLinearRGB(image[i].xyz);
 
-  float4 bgra_cvd = (float4)(
-      dot(bgra.xyz, vload3(0, mat)),
-      dot(bgra.xyz, vload3(1, mat)),
-      dot(bgra.xyz, vload3(2, mat)),
-      bgra.w
+  float3 bgr_cvd = (float3)(
+      dot(bgr, vload3(0, mat)),
+      dot(bgr, vload3(1, mat)),
+      dot(bgr, vload3(2, mat))
   );
 
-  image[i] = ToSRGB(mix(bgra, bgra_cvd, severity));
+  image[i].xyz = ToSRGB(mix(bgr, bgr_cvd, severity));
 }
 
 )
