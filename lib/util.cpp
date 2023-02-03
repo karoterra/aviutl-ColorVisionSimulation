@@ -5,6 +5,7 @@
 #include <delayimp.h>
 
 #include <format>
+#include <iostream>
 
 #include "macro.h"
 
@@ -29,7 +30,9 @@ bool IsDllAvailable(const char* name) {
 }
 
 void DebugPrint(const std::string& s) {
-  OutputDebugStringA(std::format("[{}] {}", STRING(LIB_NAME), s).c_str());
+  auto text = std::format("[{}] {}", STRING(LIB_NAME), s).c_str();
+  OutputDebugStringA(text);
+  std::cout << text << std::endl;
 }
 
 }  // namespace cvs

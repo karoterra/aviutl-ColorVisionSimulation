@@ -12,15 +12,15 @@
 // data, w, h = simulate(type, severity, data, w, h)
 int Simulate(lua_State *L) {
   const int argc = lua_gettop(L);
-  cvs::DebugPrint(std::format("argc = {}\n", argc));
+  if (argc < 5) {
+    return 0;
+  }
 
   const auto type = cvs::ToColorVisionType(lua_tointeger(L, 1));
   const float severity = lua_tonumber(L, 2);
   auto image = reinterpret_cast<cvs::BGRA *>(lua_touserdata(L, 3));
   const int w = lua_tointeger(L, 4);
   const int h = lua_tointeger(L, 5);
-  cvs::DebugPrint(std::format("type = {}, severity = {}, w = {}, h = {}",
-                              (int)type, severity, w, h));
 
   if (cvs::CLManager::GetInstance().IsAvailable()) {
     cvs::SimulateCL(type, severity, image, w * h);
