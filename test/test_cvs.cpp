@@ -233,3 +233,31 @@ TEST_P(SimulationTest, Vienot1999CPU) {
   EXPECT_LT(max_val.g, 10);
   EXPECT_LT(max_val.r, 10);
 }
+
+TEST(AchromatTest, CL) {
+  const auto image_out_dir = kImageDestPath / "AchromatCL";
+  fs::create_directories(image_out_dir);
+
+  EXPECT_TRUE(fs::exists(kImageSourcePath / "input.png"));
+  auto image = load_image(kImageSourcePath / "input.png");
+  cvs::SimulateAchromatCL(1.f, image.pixels.data(), image.pixels.size());
+  write_image(image_out_dir / "achromat_cl_1.0.png", image);
+
+  image = load_image(kImageSourcePath / "input.png");
+  cvs::SimulateAchromatCL(0.55f, image.pixels.data(), image.pixels.size());
+  write_image(image_out_dir / "achromat_cl_0.55.png", image);
+}
+
+TEST(AchromatTest, CPU) {
+  const auto image_out_dir = kImageDestPath / "AchromatCPU";
+  fs::create_directories(image_out_dir);
+
+  EXPECT_TRUE(fs::exists(kImageSourcePath / "input.png"));
+  auto image = load_image(kImageSourcePath / "input.png");
+  cvs::SimulateAchromatCPU(1.f, image.pixels.data(), image.pixels.size());
+  write_image(image_out_dir / "achromat_cpu_1.0.png", image);
+
+  image = load_image(kImageSourcePath / "input.png");
+  cvs::SimulateAchromatCPU(0.55f, image.pixels.data(), image.pixels.size());
+  write_image(image_out_dir / "achromat_cpu_0.55.png", image);
+}

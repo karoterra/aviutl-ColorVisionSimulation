@@ -8,6 +8,7 @@ enum class ColorVisionType {
   Protan,
   Deutan,
   Tritan,
+  Achromat,
 };
 
 struct Brettel1997Params {
@@ -40,6 +41,8 @@ inline ColorVisionType ToColorVisionType(int type) {
       return ColorVisionType::Deutan;
     case 3:
       return ColorVisionType::Tritan;
+    case 4:
+      return ColorVisionType::Achromat;
   }
   return ColorVisionType::Common;
 }

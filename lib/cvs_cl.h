@@ -14,6 +14,8 @@ void SimulateBrettel1997CL(ColorVisionType type, float severity, BGRA* image,
 void SimulateVienot1999CL(ColorVisionType type, float severity, BGRA* image,
                           size_t len);
 
+void SimulateAchromatCL(float severity, BGRA* image, size_t len);
+
 }  // namespace cvs
 
 #endif  // CVS_LIB_CVS_CL_H_

@@ -14,6 +14,8 @@ void SimulateBrettel1997CPU(ColorVisionType type, float severity, BGRA* image,
 void SimulateVienot1999CPU(ColorVisionType type, float severity, BGRA* image,
                            size_t len);
 
+void SimulateAchromatCPU(float severity, BGRA* image, size_t len);
+
 }  // namespace cvs
 
 #endif  // CVS_LIB_CVS_CPU_H_

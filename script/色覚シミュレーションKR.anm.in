@@ -8,13 +8,14 @@
 
   type: 色覚の種類
     0: 一般的な色覚。色の変化なし。
-    1: P型色覚(1型2色覚)
-    2: D型色覚(2型2色覚)
-    3: T型色覚(3型2色覚)
+    1: P型色覚(1型2色覚), Vienot 1999 に基づく
+    2: D型色覚(2型2色覚), Vienot 1999 に基づく
+    3: T型色覚(3型2色覚), Brettel 1997 に基づく
+    4: A型色覚(1色覚), 輝度(CIE XYZ)に基づく
   severity: シミュレーションの程度。0で変化なし。100で完全に変化。
 ]]
 
---track0:type,0,3,1,1
+--track0:type,0,4,1,1
 --track1:severity,0,100,100,0.01
 
 local CVS = require("KaroterraColorVisionSimulation")

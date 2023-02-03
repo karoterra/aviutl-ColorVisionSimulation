@@ -54,4 +54,13 @@ __kernel void Vienot1999(
   image[i].xyz = ToSRGB(mix(bgr, bgr_cvd, severity));
 }
 
+__kernel void GrayCIEXYZ(
+    __global uchar4* image,
+    const float severity) {
+  size_t i = get_global_id(0);
+  float3 bgr = ToLinearRGB(image[i].xyz);
+  float y = 0.2126 * bgr.z + 0.7152 * bgr.y + 0.0722 * bgr.x;
+  image[i].xyz = ToSRGB(mix(bgr, (float3)y, severity));
+}
+
 )

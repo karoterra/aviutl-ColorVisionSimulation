@@ -20,6 +20,8 @@ void SimulateCPU(ColorVisionType type, float severity, BGRA* image,
     case ColorVisionType::Tritan:
       SimulateVienot1999CPU(type, severity, image, len);
       break;
+    case ColorVisionType::Achromat:
+      SimulateAchromatCPU(severity, image, len);
   }
 }
 
@@ -66,6 +68,23 @@ void SimulateVienot1999CPU(ColorVisionType type, float severity, BGRA* image,
     image[i].b = ToSRGB(mix(bgr[0], bgr_sim[0], severity));
     image[i].g = ToSRGB(mix(bgr[1], bgr_sim[1], severity));
     image[i].r = ToSRGB(mix(bgr[2], bgr_sim[2], severity));
+  }
+}
+
+// caluculate luminance of CIE XYZ
+void SimulateAchromatCPU(float severity, BGRA* image, size_t len) {
+#pragma omp parallel for
+  for (int i = 0; i < len; i++) {
+    const float bgr[3]{
+        ToLinearRGB(image[i].b),
+        ToLinearRGB(image[i].g),
+        ToLinearRGB(image[i].r),
+    };
+    const float y = 0.2126 * bgr[2] + 0.7152 * bgr[1] + 0.0722 * bgr[0];
+
+    image[i].b = ToSRGB(mix(bgr[0], y, severity));
+    image[i].g = ToSRGB(mix(bgr[1], y, severity));
+    image[i].r = ToSRGB(mix(bgr[2], y, severity));
   }
 }
 

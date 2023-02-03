@@ -16,6 +16,9 @@ void SimulateCL(ColorVisionType type, float severity, BGRA* image, size_t len) {
     case ColorVisionType::Tritan:
       SimulateVienot1999CL(type, severity, image, len);
       break;
+    case ColorVisionType::Achromat:
+      SimulateAchromatCL(severity, image, len);
+      break;
   }
 }
 
@@ -79,6 +82,30 @@ void SimulateVienot1999CL(ColorVisionType type, float severity, BGRA* image,
     queue.enqueueReadBuffer(buf_image, CL_TRUE, 0, image_size, image);
   } catch (const cl::Error& e) {
     DebugPrint("Failed to SimulateVienot1999CL");
+    DebugPrint(std::format("cl::Error({}, {})", e.err(), e.what()));
+  }
+}
+
+void SimulateAchromatCL(float severity, BGRA* image, size_t len) {
+  try {
+    const auto& cl_manager = CLManager::GetInstance();
+    const auto& context = cl_manager.GetContext();
+    const auto& queue = cl_manager.GetCommandQueue();
+    const size_t image_size = sizeof(BGRA) * len;
+
+    cl::Buffer buf_image(context, CL_MEM_READ_WRITE, image_size);
+    queue.enqueueWriteBuffer(buf_image, CL_TRUE, 0, image_size, image);
+
+    cl::Kernel kernel(cl_manager.GetProgram(), "GrayCIEXYZ");
+    kernel.setArg(0, buf_image);
+    kernel.setArg(1, severity);
+
+    queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(len));
+    queue.finish();
+
+    queue.enqueueReadBuffer(buf_image, CL_TRUE, 0, image_size, image);
+  } catch (const cl::Error& e) {
+    DebugPrint("Failed to SimulateAchromatCL");
     DebugPrint(std::format("cl::Error({}, {})", e.err(), e.what()));
   }
 }
