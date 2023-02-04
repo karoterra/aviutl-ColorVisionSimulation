@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(aviutl-ColorVisionSimulation)
-set(PROJECT_VERSION 1.0.0-beta)
+set(PROJECT_VERSION 1.0.0)
 
 enable_testing()
 
