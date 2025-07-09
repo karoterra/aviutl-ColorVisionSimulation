@@ -3,6 +3,8 @@
 自分と違う色覚を持つ人はどのように色が見えているのかシミュレーションする
 [AviUtl](http://spring-fragrance.mints.ne.jp/aviutl/) スクリプトです。
 
+AviUtl2 用は [aviutl2-ColorVisionSimulation](https://github.com/karoterra/aviutl2-ColorVisionSimulation) をご利用ください。
+
 ## 注意事項
 
 このスクリプトは、P型、D型、T型色覚の人はどのように色が見えているか一般的な色覚の人が体験するためのものです。
